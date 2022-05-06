@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Res} from '@nestjs/common';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
@@ -7,29 +8,52 @@ import { UsersService } from './users.service';
 export class UsersController {
     constructor (private readonly userService : UsersService){}
 
-
     @Get()
-    list(): User[] {
-        return this.userService.listAllUsers();
+    async list(@Res() response) {
+        const users: User[] = await this.userService.listAllUsers();
+        return response.status(201).json(
+            users
+        )
     }
 
     @Post()
-    create(@Body() createUserDto: CreateUserDto): string {
-        return `Name:${createUserDto.firstName}`;
+    async create(@Res() response, @Body() createUserDto: CreateUserDto){
+        const user = await this.userService.createUser();
+        return response.status(201).json(
+            user
+        )
     }
 
     @Put(':id')
-    update(@Body() updateUserDto: CreateUserDto, @Param('id') userId): string {
-        return 'user updated';
+    async update(@Res() response, @Body() updateUserDto: CreateUserDto, @Param('id') userId) {
+        const result: UpdateResult = await this.userService.updateUser(userId,updateUserDto);
+        return response.status(201).json(
+            result
+        )
     }
 
     @Delete(':id')
-    delete(@Param('id') userId): string{
-        return 'users deleted';
+    async delete(@Res() response, @Param('id') userId){
+        const result: DeleteResult = await this.userService.deleteUser(userId);
+        return response.status(201).json(
+            result
+        )
+        // return 'users deleted';
     }
 
     @Get(':id')
-    findOne(@Param('id') userId): User {
-        return this.userService.findOneUser(userId);
+    async findOne(@Res() response, @Param('id') userId){
+        try {
+            const user: User = await this.userService.findOneUser(userId);
+            return response.status(201).json(
+                user
+            )
+        } catch (error) {
+            Logger.log(error);
+            return response.status(500).json(
+                error.message
+            )
+        }
+        
     }
 }

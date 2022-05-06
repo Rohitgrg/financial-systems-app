@@ -1,6 +1,16 @@
-export interface User {
-    id?: string;
-    firstName: string;
-    lastName: string;
-    balance: number;
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  firstName: string;
+
+  @Column()
+  lastName: string;
+
+  @Column({default: 0})
+  balance: number;
 }
