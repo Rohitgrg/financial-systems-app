@@ -6,6 +6,10 @@ import { User } from './users/models/user.model';
 import { UserModule } from './users/user.module';
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
+import { TransactionsController } from './transactions/transactions.controller';
+import { TransactionsService } from './transactions/transactions.service';
+import { TransactionModule } from './transactions/transactions.module';
+import { Transaction } from './transactions/models/transaction.model';
 
 @Module({
   imports: [
@@ -16,10 +20,11 @@ import { UsersService } from './users/users.service';
       username: 'root',
       password: 'root1234',
       database: 'finance',
-      entities: [User],
+      entities: [User, Transaction],
       synchronize: true,
     }),
-    UserModule
+    UserModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
