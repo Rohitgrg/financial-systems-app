@@ -11,9 +11,9 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  createUser(user: CreateUserDto): Promise<User> {
-    return this.usersRepository.save(user);
-  }
+  // createUser(user: CreateUserDto): Promise<User> {
+  //   return this.usersRepository.save(user);
+  // }
 
   listAllUsers(): Promise<User[]> {
     return this.usersRepository.find();
